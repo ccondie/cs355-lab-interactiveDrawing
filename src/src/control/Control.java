@@ -112,7 +112,7 @@ public class Control implements CS355Controller
 				activeShape = true;
 				break;
 			case 5: 
-				Model.get().addShape(new Triangle(Model.selectedColor, new Point2D.Double(arg0.getX(), arg0.getY()), null, null));
+				Model.get().addShape(new Triangle(Model.selectedColor, null, new Point2D.Double(arg0.getX(), arg0.getY()), null, null));
 				activeShape = true;
 				break;
 			}
@@ -244,6 +244,8 @@ public class Control implements CS355Controller
 				double lengthY = arg0.getY() - focusRect.getFirstCorner().y;
 				
 				focusRect.setUpperLeft(focusRect.getFirstCorner());
+				//focusRect.setCenter(new Point2D.Double(x,y));
+				
 				focusRect.setWidth(lengthX);
 				focusRect.setHeight(lengthY);
 			}
@@ -255,6 +257,8 @@ public class Control implements CS355Controller
 				double lengthY = arg0.getY() - focusRect.getFirstCorner().y;
 				
 				focusRect.setUpperLeft(new Point2D.Double(arg0.getX(), focusRect.getFirstCorner().y));
+				//focusRect.setCenter(new Point2D.Double(x,y));
+				
 				focusRect.setWidth(lengthX);
 				focusRect.setHeight(lengthY);
 			}
@@ -270,6 +274,8 @@ public class Control implements CS355Controller
 				double lengthY = focusRect.getFirstCorner().y - arg0.getY();
 				
 				focusRect.setUpperLeft(new Point2D.Double(focusRect.getFirstCorner().x, focusRect.getFirstCorner().y  - lengthY));
+				//focusRect.setCenter(new Point2D.Double(x,y));
+				
 				focusRect.setWidth(lengthX);
 				focusRect.setHeight(lengthY);
 			}
@@ -304,6 +310,8 @@ public class Control implements CS355Controller
 				double newlength = Math.min(lengthX, lengthY);
 				
 				focusCircle.setUpperLeft(focusCircle.getFirstCorner());
+				//focusRect.setCenter(new Point2D.Double(x,y));
+				
 				focusCircle.setRadius(newlength / 2);
 			}
 
@@ -315,6 +323,8 @@ public class Control implements CS355Controller
 				double newlength = Math.min(lengthX, lengthY);
 				
 				focusCircle.setUpperLeft(new Point2D.Double(focusCircle.getFirstCorner().x - newlength, focusCircle.getFirstCorner().y));
+				//focusRect.setCenter(new Point2D.Double(x,y));
+				
 				focusCircle.setRadius(newlength / 2);
 			}
 		}
@@ -330,6 +340,8 @@ public class Control implements CS355Controller
 				double newlength = Math.min(lengthX, lengthY);
 				
 				focusCircle.setUpperLeft(new Point2D.Double(focusCircle.getFirstCorner().x, focusCircle.getFirstCorner().y  - newlength));
+				//focusRect.setCenter(new Point2D.Double(x,y));
+				
 				focusCircle.setRadius(newlength / 2);
 			}
 
@@ -341,6 +353,8 @@ public class Control implements CS355Controller
 				double newlength = Math.min(lengthX, lengthY);
 				
 				focusCircle.setUpperLeft(new Point2D.Double(focusCircle.getFirstCorner().x - newlength, focusCircle.getFirstCorner().y - newlength));
+				//focusRect.setCenter(new Point2D.Double(x,y));
+				
 				focusCircle.setRadius(newlength / 2);
 			}
 		}
@@ -363,6 +377,8 @@ public class Control implements CS355Controller
 				double lengthY = arg0.getY() - focusElli.getFirstCorner().y;
 				
 				focusElli.setUpperLeft(focusElli.getFirstCorner());
+				//focusRect.setCenter(new Point2D.Double(x,y));
+				
 				focusElli.setWidth(lengthX);
 				focusElli.setHeight(lengthY);
 			}
@@ -374,6 +390,8 @@ public class Control implements CS355Controller
 				double lengthY = arg0.getY() - focusElli.getFirstCorner().y;
 				
 				focusElli.setUpperLeft(new Point2D.Double(arg0.getX(), focusElli.getFirstCorner().y));
+				//focusRect.setCenter(new Point2D.Double(x,y));
+				
 				focusElli.setWidth(lengthX);
 				focusElli.setHeight(lengthY);
 			}
@@ -389,6 +407,8 @@ public class Control implements CS355Controller
 				double lengthY = focusElli.getFirstCorner().y - arg0.getY();
 				
 				focusElli.setUpperLeft(new Point2D.Double(focusElli.getFirstCorner().x, focusElli.getFirstCorner().y  - lengthY));
+				//focusRect.setCenter(new Point2D.Double(x,y));
+				
 				focusElli.setWidth(lengthX);
 				focusElli.setHeight(lengthY);
 			}
@@ -400,6 +420,8 @@ public class Control implements CS355Controller
 				double lengthY = focusElli.getFirstCorner().y - arg0.getY();
 				
 				focusElli.setUpperLeft(new Point2D.Double(arg0.getX(), arg0.getY()));
+				//focusRect.setCenter(new Point2D.Double(x,y));
+				
 				focusElli.setWidth(lengthX);
 				focusElli.setHeight(lengthY);
 			}
@@ -440,8 +462,6 @@ public class Control implements CS355Controller
 	public void triangleButtonHit() 
 	{	
 		Model.get().setMode(5);
-		
-
 	}
 
 	@Override

@@ -7,12 +7,15 @@ import java.awt.geom.Point2D;
  * Add your triangle code here. You can add fields, but you cannot
  * change the ones that already exist. This includes the names!
  */
-public class Triangle extends Shape {
+public class Triangle extends Shape 
+{
 
 	// The three points of the triangle.
 	private Point2D.Double a;
 	private Point2D.Double b;
 	private Point2D.Double c;
+	
+	private int cornerCount;
 
 	/**
 	 * Basic constructor that sets all fields.
@@ -33,7 +36,14 @@ public class Triangle extends Shape {
 		this.a = a;
 		this.b = b;
 		this.c = c;
+		cornerCount = 1;
 	}
+	
+	public int getCornerCount()
+	{	return cornerCount;	}
+	
+	public void incCornerCount()
+	{	cornerCount++;	}
 
 	/**
 	 * Getter for the first point.

@@ -7,7 +7,10 @@ import java.awt.geom.Point2D;
  * Add your rectangle code here. You can add fields, but you cannot
  * change the ones that already exist. This includes the names!
  */
-public class Rectangle extends Shape {
+public class Rectangle extends Shape 
+{
+	//defines the first corner of the shape as it was places, used in the shape creation process
+	private Point2D.Double firstCorner;
 
 	// The width of this shape.
 	private double width;
@@ -31,38 +34,64 @@ public class Rectangle extends Shape {
 		this.width = width;
 		this.height = height;
 	}
-
+	
+	///////////////////////////////////////////////////////////
+	/////	User Defined Methods	///////////////////////////
+	///////////////////////////////////////////////////////////
+	
+	//returns the 2D coor of the upper right corner for the sake of rendering
+	public Point2D.Double getUpperLeft()
+	{
+		Point2D.Double returnThis = new Point2D.Double();
+		
+		double x = center.x - (width/2);
+		double y = center.y - (height/2);
+		
+		returnThis.x = x;
+		returnThis.y = y;
+		
+		return returnThis;
+	}
+	
+	
+	public Point2D.Double getFirstCorner()
+	{	return firstCorner;	}
+			
+	public void setFirstCorner(Point2D.Double point)
+	{	 firstCorner = point;	}
+	
+	///////////////////////////////////////////////////////////
+	/////	Abstracted/Program defined Methods	///////////////
+	///////////////////////////////////////////////////////////
 	/**
 	 * Getter for this shape's width.
 	 * @return this shape's width as a double.
 	 */
-	public double getWidth() {
-		return width;
-	}
+	public double getWidth() 
+	{	return width;	}
 
 	/**
 	 * Setter for this shape's width.
 	 * @param width the new width.
 	 */
-	public void setWidth(double width) {
-		this.width = width;
-	}
+	public void setWidth(double width) 
+	{	this.width = width;	}
 
 	/**
 	 * Getter for this shape's height.
 	 * @return this shape's height as a double.
 	 */
-	public double getHeight() {
-		return height;
-	}
+	public double getHeight() 
+	{	return height;	}
 
 	/**
 	 * Setter for this shape's height.
 	 * @param height the new height.
 	 */
-	public void setHeight(double height) {
-		this.height = height;
-	}
+	public void setHeight(double height) 
+	{	this.height = height;	}
+	
+	
 
 	/**
 	 * Add your code to do an intersection test

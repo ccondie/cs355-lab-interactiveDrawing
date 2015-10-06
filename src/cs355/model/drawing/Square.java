@@ -7,10 +7,15 @@ import java.awt.geom.Point2D;
  * Add your square code here. You can add fields, but you cannot
  * change the ones that already exist. This includes the names!
  */
-public class Square extends Shape {
-
+public class Square extends Shape 
+{
 	// The size of this Square.
 	private double size;
+	
+	// The upper left corner of this shape.
+	//These will be generated from the center point, size, and rotation?
+	private Point2D.Double upperLeft;
+	private Point2D.Double firstCorner;
 
 	/**
 	 * Basic constructor that sets all fields.
@@ -18,8 +23,8 @@ public class Square extends Shape {
 	 * @param center the center of the new shape.
 	 * @param size the size of the new shape.
 	 */
-	public Square(Color color, Point2D.Double center, double size) {
-
+	public Square(Color color, Point2D.Double center, double size) 
+	{
 		// Initialize the superclass.
 		super(color, center);
 
@@ -27,22 +32,49 @@ public class Square extends Shape {
 		this.size = size;
 	}
 
+	
+	
+	/**
+	 * Getter for this Rectangle's upper left corner.
+	 * @return the upper left corner as a Java point.
+	 */
+	public Point2D.Double getUpperLeft() 
+	{	return upperLeft;	}
+	
+	public Point2D.Double getFirstCorner()
+	{	return firstCorner;	}
+	public void setFirstCorner(Point2D.Double point)
+	{	 firstCorner = point;	}
+
+	/**
+	 * Setter for this Rectangle's upper left corner.
+	 * @param upperLeft the new upper left corner.
+	 */
+	public void setUpperLeft(Point2D.Double upperLeft) 
+	{	this.upperLeft = upperLeft;	}
+	
+	
+	
+	
 	/**
 	 * Getter for this Square's size.
 	 * @return the size as a double.
 	 */
-	public double getSize() {
-		return size;
-	}
+	public double getSize() 
+	{	return size;	}
 
 	/**
 	 * Setter for this Square's size.
 	 * @param size the new size.
 	 */
-	public void setSize(double size) {
-		this.size = size;
-	}
+	public void setSize(double size) 
+	{	this.size = size;	}
 
+	
+	
+	
+	
+	
 	/**
 	 * Add your code to do an intersection test
 	 * here. You shouldn't need the tolerance.

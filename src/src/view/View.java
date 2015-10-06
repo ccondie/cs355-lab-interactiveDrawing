@@ -34,9 +34,12 @@ public class View implements ViewRefresher
 		{
 			Shape focus = currentShapes.get(i);
 			
+			//draw primary shape
 			g2d.setColor(focus.getColor());
 			g2d.fill(shapeFactory(focus));
 			g2d.draw(shapeFactory(focus));
+			
+			//draw handles if the shape is active
 		}
 	}
 	
@@ -45,7 +48,7 @@ public class View implements ViewRefresher
 		if(focus instanceof Line)
 		{
 			Line focusLine = (Line)focus;
-			Point2D.Double start = new Point2D.Double(focusLine.getStart().x, focusLine.getStart().y);		
+			Point2D.Double start = new Point2D.Double(focusLine.getCenter().x, focusLine.getCenter().y);		
 			Point2D.Double end = new Point2D.Double(focusLine.getEnd().x, focusLine.getEnd().y);
 			
 			return new Line2D.Double(start.x, start.y, end.x, end.y);
@@ -74,7 +77,6 @@ public class View implements ViewRefresher
 		
 		if(focus instanceof Circle)
 		{
-			//create a Rectangle2D object and return it
 			double x = ((Circle) focus).getUpperLeft().x;
 			double y = ((Circle) focus).getUpperLeft().y;
 			double radius = ((Circle) focus).getRadius();
@@ -84,7 +86,6 @@ public class View implements ViewRefresher
 		
 		if(focus instanceof Ellipse)
 		{
-			//create a Rectangle2D object and return it
 			double x = ((Ellipse) focus).getUpperLeft().x;
 			double y = ((Ellipse) focus).getUpperLeft().y;
 			double width = ((Ellipse) focus).getWidth();
@@ -95,7 +96,6 @@ public class View implements ViewRefresher
 		
 		if(focus instanceof Triangle)
 		{
-			//create a Rectangle2D object and return it
 			if(((Triangle) focus).getCornerCount() == 3)
 			{
 				int[] x = new int[3];

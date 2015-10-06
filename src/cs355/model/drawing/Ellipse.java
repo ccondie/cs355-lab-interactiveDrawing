@@ -7,14 +7,8 @@ import java.awt.geom.Point2D;
  * Add your ellipse code here. You can add fields, but you cannot
  * change the ones that already exist. This includes the names!
  */
-public class Ellipse extends Shape {
-
-	// The width of this shape.
-	private double width;
-
-	// The height of this shape.
-	private double height;
-
+public class Ellipse extends Shape 
+{
 	/**
 	 * Basic constructor that sets all fields.
 	 * @param color the color for the new shape.
@@ -31,7 +25,56 @@ public class Ellipse extends Shape {
 		this.width = width;
 		this.height = height;
 	}
+	
 
+	///////////////////////////////////////////////////////////
+	/////	User Defined Variables	///////////////////////////
+	///////////////////////////////////////////////////////////
+	
+	private Point2D.Double firstCorner;
+	
+	
+	///////////////////////////////////////////////////////////
+	/////	Abstracted/Program defined Variables	///////////
+	///////////////////////////////////////////////////////////
+	
+	// The width of this shape.
+	private double width;
+
+	// The height of this shape.
+	private double height;
+
+	
+	
+	///////////////////////////////////////////////////////////
+	/////	User Defined Methods	///////////////////////////
+	///////////////////////////////////////////////////////////
+
+	//returns the 2D coor of the upper right corner for the sake of rendering
+	public Point2D.Double getUpperLeft()
+	{
+		Point2D.Double returnThis = new Point2D.Double();
+		
+		double x = center.x - (width/2);
+		double y = center.y - (height/2);
+		
+		returnThis.x = x;
+		returnThis.y = y;
+		
+		return returnThis;
+	}
+	
+	public Point2D.Double getFirstCorner()
+	{	return firstCorner;	}
+			
+	public void setFirstCorner(Point2D.Double point)
+	{	 firstCorner = point;	}
+	
+	
+	///////////////////////////////////////////////////////////
+	/////	Abstracted/Program defined Methods	///////////////
+	///////////////////////////////////////////////////////////
+	
 	/**
 	 * Getter for this shape's width.
 	 * @return this shape's width as a double.

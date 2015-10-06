@@ -7,8 +7,9 @@ import java.awt.geom.Point2D;
  * Add your line code here. You can add fields, but you cannot
  * change the ones that already exist. This includes the names!
  */
-public class Line extends Shape {
-
+public class Line extends Shape 
+{
+	
 	// The ending point of the line.
 	private Point2D.Double end;
 
