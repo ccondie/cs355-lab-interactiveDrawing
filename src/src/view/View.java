@@ -1,5 +1,6 @@
 package src.view;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.geom.Line2D;
@@ -56,42 +57,26 @@ public class View implements ViewRefresher
 		
 		if(focus instanceof Square)
 		{
-			//create a Rectangle2D object and return it
-			double x = ((Square) focus).getUpperLeft().x;
-			double y = ((Square) focus).getUpperLeft().y;
-			double width = ((Square) focus).getSize();
-			
-			return new Rectangle2D.Double(x, y, width, width);
+			Square active = (Square) focus;
+			return new Rectangle2D.Double(active.getUpperLeft().x, active.getUpperLeft().y, active.getSize(), active.getSize());
 		}
 		
 		if(focus instanceof Rectangle)
 		{
-			//create a Rectangle2D object and return it
-			double x = ((Rectangle) focus).getUpperLeft().x;
-			double y = ((Rectangle) focus).getUpperLeft().y;
-			double width = ((Rectangle) focus).getWidth();
-			double height = ((Rectangle) focus).getHeight();
-			
-			return new Rectangle2D.Double(x, y, width, height);
+			Rectangle active = (Rectangle) focus;
+			return new Rectangle2D.Double(active.getUpperLeft().x, active.getUpperLeft().y, active.getWidth(), active.getHeight());
 		}
 		
 		if(focus instanceof Circle)
 		{
-			double x = ((Circle) focus).getUpperLeft().x;
-			double y = ((Circle) focus).getUpperLeft().y;
-			double radius = ((Circle) focus).getRadius();
-			
-			return new Ellipse2D.Double(x, y, radius * 2, radius * 2);
+			Circle active = (Circle) focus;
+			return new Ellipse2D.Double(active.getUpperLeft().x, active.getUpperLeft().y, active.getRadius() * 2, active.getRadius() * 2);
 		}
 		
 		if(focus instanceof Ellipse)
 		{
-			double x = ((Ellipse) focus).getUpperLeft().x;
-			double y = ((Ellipse) focus).getUpperLeft().y;
-			double width = ((Ellipse) focus).getWidth();
-			double height = ((Ellipse) focus).getHeight();
-			
-			return new Ellipse2D.Double(x, y, width, height);
+			Ellipse active = (Ellipse) focus;
+			return new Ellipse2D.Double(active.getUpperLeft().x, active.getUpperLeft().y, active.getWidth(), active.getHeight());
 		}
 		
 		if(focus instanceof Triangle)

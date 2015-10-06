@@ -10,7 +10,7 @@ import java.awt.geom.Point2D;
 public class Rectangle extends Shape 
 {
 	//defines the first corner of the shape as it was places, used in the shape creation process
-	private Point2D.Double firstCorner;
+	private Point2D.Double fixedCorner;
 
 	// The width of this shape.
 	private double width;
@@ -25,14 +25,15 @@ public class Rectangle extends Shape
 	 * @param width the width of the new shape.
 	 * @param height the height of the new shape.
 	 */
-	public Rectangle(Color color, Point2D.Double center, double width, double height) {
-
+	public Rectangle(Color color, Point2D.Double center, double width, double height) 
+	{
 		// Initialize the superclass.
 		super(color, center);
 
 		// Set fields.
 		this.width = width;
 		this.height = height;
+		this.fixedCorner = center;
 	}
 	
 	///////////////////////////////////////////////////////////
@@ -54,11 +55,11 @@ public class Rectangle extends Shape
 	}
 	
 	
-	public Point2D.Double getFirstCorner()
-	{	return firstCorner;	}
+	public Point2D.Double getFixedCorner()
+	{	return fixedCorner;	}
 			
-	public void setFirstCorner(Point2D.Double point)
-	{	 firstCorner = point;	}
+	public void setFixedCorner(Point2D.Double point)
+	{	 fixedCorner = point;	}
 	
 	///////////////////////////////////////////////////////////
 	/////	Abstracted/Program defined Methods	///////////////
