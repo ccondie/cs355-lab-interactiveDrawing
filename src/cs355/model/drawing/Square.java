@@ -9,14 +9,6 @@ import java.awt.geom.Point2D;
  */
 public class Square extends Shape 
 {
-	// The size of this Square.
-	private double size;
-	
-	// The upper left corner of this shape.
-	//These will be generated from the center point, size, and rotation?
-	private Point2D.Double upperLeft;
-	private Point2D.Double firstCorner;
-
 	/**
 	 * Basic constructor that sets all fields.
 	 * @param color the color for the new shape.
@@ -30,31 +22,59 @@ public class Square extends Shape
 
 		// Set the field.
 		this.size = size;
+		this.fixedCorner = center;
 	}
+	
+	///////////////////////////////////////////////////////////
+	/////	User Defined Variables	///////////////////////////
+	///////////////////////////////////////////////////////////
+	
+	// The upper left corner of this shape.
+	//These will be generated from the center point, size, and rotation?
+	private Point2D.Double fixedCorner;
+	
+	
+	
+	///////////////////////////////////////////////////////////
+	/////	Abstracted/Program defined Variables	///////////
+	///////////////////////////////////////////////////////////
 
+	// The size of this Square.
+		private double size;
+	
+		
+		
+	///////////////////////////////////////////////////////////
+	/////	User Defined Methods	///////////////////////////
+	///////////////////////////////////////////////////////////
+	
+	//returns the 2D coor of the upper right corner for the sake of rendering
+	public Point2D.Double getUpperLeft()
+	{
+		Point2D.Double returnThis = new Point2D.Double();
+		
+		double x = center.x - (size/2);
+		double y = center.y - (size/2);
+		
+		returnThis.x = x;
+		returnThis.y = y;
+		
+		return returnThis;
+	}
 	
 	
-	/**
-	 * Getter for this Rectangle's upper left corner.
-	 * @return the upper left corner as a Java point.
-	 */
-	public Point2D.Double getUpperLeft() 
-	{	return upperLeft;	}
+	public Point2D.Double getFixedCorner()
+	{	return fixedCorner;	}
 	
-	public Point2D.Double getFirstCorner()
-	{	return firstCorner;	}
-	public void setFirstCorner(Point2D.Double point)
-	{	 firstCorner = point;	}
-
-	/**
-	 * Setter for this Rectangle's upper left corner.
-	 * @param upperLeft the new upper left corner.
-	 */
-	public void setUpperLeft(Point2D.Double upperLeft) 
-	{	this.upperLeft = upperLeft;	}
+	public void setFixedCorner(Point2D.Double point)
+	{	 fixedCorner = point;	}
 	
 	
 	
+	
+	///////////////////////////////////////////////////////////
+	/////	Abstracted/Program defined Methods	///////////////
+	///////////////////////////////////////////////////////////
 	
 	/**
 	 * Getter for this Square's size.
@@ -70,10 +90,6 @@ public class Square extends Shape
 	public void setSize(double size) 
 	{	this.size = size;	}
 
-	
-	
-	
-	
 	
 	/**
 	 * Add your code to do an intersection test

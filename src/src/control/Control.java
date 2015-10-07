@@ -164,60 +164,38 @@ public class Control implements CS355Controller
 	public void handleActiveSquare(MouseEvent arg0)
 	{
 //		System.out.println("instance: Square");
+		Square active = (Square) Model.get().getRecent();
 		
-		Square focusSquare = (Square) Model.get().getRecent();
-		//if the cursor is moving below the upperleft corner
-		if(arg0.getY() > focusSquare.getFirstCorner().y)
-		{
-			//if the cursor is moving to the bottomright quad
-			if(arg0.getX() > focusSquare.getFirstCorner().x)
-			{
-				double lengthX = arg0.getX() - focusSquare.getFirstCorner().x;
-				double lengthY = arg0.getY() - focusSquare.getFirstCorner().y;
-				double newlength = Math.min(lengthX, lengthY);
-				
-				focusSquare.setUpperLeft(focusSquare.getFirstCorner());
-				focusSquare.setSize(newlength);
-			}
-
-			//if the cursor is moving to the bottomleft quad
-			if(arg0.getX() < focusSquare.getFirstCorner().x)
-			{
-				double lengthX = focusSquare.getFirstCorner().x - arg0.getX();
-				double lengthY = arg0.getY() - focusSquare.getFirstCorner().y;
-				double newlength = Math.min(lengthX, lengthY);
-				
-				focusSquare.setUpperLeft(new Point2D.Double(focusSquare.getFirstCorner().x - newlength, focusSquare.getFirstCorner().y));
-				focusSquare.setSize(newlength);
-			}
-		}
-
-		//if the cursor is moving above the upperleft corner
-		if(arg0.getY() < focusSquare.getFirstCorner().y)
-		{
-			//if the cursor is moving to the upperright quad
-			if(arg0.getX() > focusSquare.getFirstCorner().x)
-			{
-				double lengthX = arg0.getX() - focusSquare.getFirstCorner().x;
-				double lengthY = focusSquare.getFirstCorner().y - arg0.getY();
-				double newlength = Math.min(lengthX, lengthY);
-				
-				focusSquare.setUpperLeft(new Point2D.Double(focusSquare.getFirstCorner().x, focusSquare.getFirstCorner().y  - newlength));
-				focusSquare.setSize(newlength);
-			}
-
-			//if the cursor is moving to the upperleft quad
-			if(arg0.getX() < focusSquare.getFirstCorner().x)
-			{
-				double lengthX = focusSquare.getFirstCorner().x - arg0.getX();
-				double lengthY = focusSquare.getFirstCorner().y - arg0.getY();
-				double newlength = Math.min(lengthX, lengthY);
-				
-				focusSquare.setUpperLeft(new Point2D.Double(focusSquare.getFirstCorner().x - newlength, focusSquare.getFirstCorner().y - newlength));
-				focusSquare.setSize(newlength);
-			}
-		}
-		Model.get().setRecent(focusSquare);
+		Point2D.Double fixed = active.getFixedCorner();
+		
+		//find the shortest size;
+		double sizeX = fixed.x - arg0.getX();
+		double sizeY = fixed.y - arg0.getY();
+		double newSize = Math.min(Math.abs(sizeX), Math.abs(sizeY));
+		active.setSize(newSize);
+		
+		System.out.println("sizeX: " + sizeX + " - sizeY: " + sizeY + " - newSize: " + newSize);
+		
+		
+		//set the new center
+		double newX;
+		double newY;
+		
+		if(sizeX >= 0)
+			newX = fixed.x - (newSize / 2);
+		else
+			newX = fixed.x + (newSize / 2);
+		
+		
+		if(sizeY >= 0)
+			newY = fixed.y - (newSize / 2);
+		else
+			newY = fixed.y + (newSize / 2);
+		
+		Point2D.Double newCenter = new Point2D.Double(newX, newY);
+		active.setCenter(newCenter);
+		
+		Model.get().setRecent(active);
 	}
 
 	public void handleActiveLine(MouseEvent arg0)
