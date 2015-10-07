@@ -2,6 +2,7 @@ package cs355.model.drawing;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.io.StringWriter;
 
 /**
  * Add your triangle code here. You can add fields, but you cannot
@@ -9,14 +10,6 @@ import java.awt.geom.Point2D;
  */
 public class Triangle extends Shape 
 {
-
-	// The three points of the triangle.
-	private Point2D.Double a;
-	private Point2D.Double b;
-	private Point2D.Double c;
-	
-	private int cornerCount;
-
 	/**
 	 * Basic constructor that sets all fields.
 	 * @param color the color for the new shape.
@@ -36,15 +29,46 @@ public class Triangle extends Shape
 		this.a = a;
 		this.b = b;
 		this.c = c;
-		cornerCount = 1;
 	}
 	
-	public int getCornerCount()
-	{	return cornerCount;	}
+	///////////////////////////////////////////////////////////
+	/////	User Defined Variables	///////////////////////////
+	///////////////////////////////////////////////////////////
 	
-	public void incCornerCount()
-	{	cornerCount++;	}
+	// The three points of the triangle.
+	private Point2D.Double a;
+	private Point2D.Double b;
+	private Point2D.Double c;
 
+		
+	///////////////////////////////////////////////////////////
+	/////	Abstracted/Program defined Variables	///////////
+	///////////////////////////////////////////////////////////
+	
+
+	
+	///////////////////////////////////////////////////////////
+	/////	User Defined Methods	///////////////////////////
+	///////////////////////////////////////////////////////////
+	
+	public String toString()
+	{
+		StringWriter sw = new StringWriter();
+		
+		sw.append("PointA - x:" + a.x + " - y:" + a.y + '\n');
+		sw.append("PointB - x:" + b.x + " - y:" + b.y + '\n');
+		sw.append("PointC - x:" + c.x + " - y:" + c.y + '\n');
+		sw.append("Center - x:" + center.x + " - y:" + center.y + '\n');
+		
+		return sw.toString();
+	}
+
+
+		
+	///////////////////////////////////////////////////////////
+	/////	Abstracted/Program defined Methods	///////////////
+	///////////////////////////////////////////////////////////
+	
 	/**
 	 * Getter for the first point.
 	 * @return the first point as a Java point.
@@ -57,7 +81,8 @@ public class Triangle extends Shape
 	 * Setter for the first point.
 	 * @param a the new first point.
 	 */
-	public void setA(Point2D.Double a) {
+	public void setA(Point2D.Double a)
+	{
 		this.a = a;
 	}
 

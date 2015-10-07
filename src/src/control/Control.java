@@ -32,6 +32,7 @@ public class Control implements CS355Controller
 			.registerTypeAdapter(Shape.class, new JsonShape()).create();
 	
 	boolean activeShape = false;
+	ArrayList<Point2D.Double> activeTriangle = new ArrayList<Point2D.Double>();
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) 
@@ -70,20 +71,38 @@ public class Control implements CS355Controller
 			
 			if(Model.get().getRecent() instanceof Triangle)
 			{	
-				Triangle focus = (Triangle)Model.get().getRecent();
-				if(focus.getCornerCount() == 2)
-				{
-					focus.setC(new Point2D.Double(arg0.getX(), arg0.getY()));
-					focus.incCornerCount();
-					GUIFunctions.refresh();
-					activeShape = false;
-				}
-				
-				if(focus.getCornerCount() == 1)
+				if(activeTriangle.size() == 1)
 				{
 					//add second corner
-					focus.setB(new Point2D.Double(arg0.getX(), arg0.getY()));
-					focus.incCornerCount();
+					System.out.println("ADDING SECOND CORNER");
+					activeTriangle.add(new Point2D.Double(arg0.getX(), arg0.getY()));
+				}
+				else if(activeTriangle.size() == 2)
+				{
+					//add third corner
+					System.out.println("ADDING THIRD CORNER");
+					activeTriangle.add(new Point2D.Double(arg0.getX(), arg0.getY()));
+					//calculate center
+					Point2D.Double center = new Point2D.Double();
+					center.x = (activeTriangle.get(0).x + activeTriangle.get(1).x + activeTriangle.get(2).x) / 3;
+					center.y = (activeTriangle.get(0).y + activeTriangle.get(1).y + activeTriangle.get(2).y) / 3;
+					
+					//calculate a,b,c
+					Point2D.Double a = new Point2D.Double(center.x - activeTriangle.get(0).x, center.y - activeTriangle.get(0).y);
+					Point2D.Double b = new Point2D.Double(center.x - activeTriangle.get(1).x, center.y - activeTriangle.get(1).y);
+					Point2D.Double c = new Point2D.Double(center.x - activeTriangle.get(2).x, center.y - activeTriangle.get(2).y);
+					
+					//create Triangle
+					Triangle focus = new Triangle(Model.selectedColor, center, a, b, c);
+					Model.get().setRecent(focus);
+					System.out.println(focus.toString());
+					
+					//reset activeTriangle
+					activeTriangle.clear();
+					
+					//refresh GUI
+					GUIFunctions.refresh();
+					activeShape = false;
 				}
 			}
 		}
@@ -112,7 +131,9 @@ public class Control implements CS355Controller
 				activeShape = true;
 				break;
 			case 5: 
-				Model.get().addShape(new Triangle(Model.selectedColor, null, new Point2D.Double(arg0.getX(), arg0.getY()), null, null));
+				Model.get().addShape(new Triangle(Model.selectedColor, null, null, null, null));
+				System.out.println("ADDING FIRST CORNER");
+				activeTriangle.add(new Point2D.Double(arg0.getX(), arg0.getY()));
 				activeShape = true;
 				break;
 			}
@@ -198,6 +219,40 @@ public class Control implements CS355Controller
 		
 		Model.get().setRecent(active);
 	}
+	
+	public void handleActiveCircle(MouseEvent arg0)
+	{
+		
+		Circle active = (Circle) Model.get().getRecent();
+		
+		Point2D.Double fixed = active.getFixedCorner();
+		
+		//find the shortest size;
+		double sizeX = fixed.x - arg0.getX();
+		double sizeY = fixed.y - arg0.getY();
+		double newSize = Math.min(Math.abs(sizeX), Math.abs(sizeY));
+		active.setRadius(newSize / 2);
+		
+		//set the new center
+		double newX;
+		double newY;
+		
+		if(sizeX >= 0)
+			newX = fixed.x - (newSize / 2);
+		else
+			newX = fixed.x + (newSize / 2);
+		
+		
+		if(sizeY >= 0)
+			newY = fixed.y - (newSize / 2);
+		else
+			newY = fixed.y + (newSize / 2);
+		
+		Point2D.Double newCenter = new Point2D.Double(newX, newY);
+		active.setCenter(newCenter);
+		
+		Model.get().setRecent(active);
+	}
 
 	public void handleActiveLine(MouseEvent arg0)
 	{
@@ -247,112 +302,6 @@ public class Control implements CS355Controller
 		
 		Model.get().setRecent(active);
 	}
-	
-	
-
-	public void handleActiveCircle(MouseEvent arg0)
-	{
-		
-		Circle active = (Circle) Model.get().getRecent();
-		
-		Point2D.Double fixed = active.getFixedCorner();
-		
-		//find the shortest size;
-		double sizeX = fixed.x - arg0.getX();
-		double sizeY = fixed.y - arg0.getY();
-		double newSize = Math.min(Math.abs(sizeX), Math.abs(sizeY));
-		active.setRadius(newSize / 2);
-		
-		System.out.println("sizeX: " + sizeX + " - sizeY: " + sizeY + " - newSize: " + newSize);
-		
-		
-		//set the new center
-		double newX;
-		double newY;
-		
-		if(sizeX >= 0)
-			newX = fixed.x - (newSize / 2);
-		else
-			newX = fixed.x + (newSize / 2);
-		
-		
-		if(sizeY >= 0)
-			newY = fixed.y - (newSize / 2);
-		else
-			newY = fixed.y + (newSize / 2);
-		
-		Point2D.Double newCenter = new Point2D.Double(newX, newY);
-		active.setCenter(newCenter);
-		
-		Model.get().setRecent(active);
-		
-////		System.out.println("instance: Circle");
-//		
-//		Circle focusCircle = (Circle) Model.get().getRecent();
-//		//if the cursor is moving below the upperleft corner
-//		if(arg0.getY() > focusCircle.getFirstCorner().y)
-//		{
-//			//if the cursor is moving to the bottomright quad
-//			if(arg0.getX() > focusCircle.getFirstCorner().x)
-//			{
-//				double lengthX = arg0.getX() - focusCircle.getFirstCorner().x;
-//				double lengthY = arg0.getY() - focusCircle.getFirstCorner().y;
-//				double newlength = Math.min(lengthX, lengthY);
-//				
-//				focusCircle.setUpperLeft(focusCircle.getFirstCorner());
-//				//focusRect.setCenter(new Point2D.Double(x,y));
-//				
-//				focusCircle.setRadius(newlength / 2);
-//			}
-//
-//			//if the cursor is moving to the bottomleft quad
-//			if(arg0.getX() < focusCircle.getFirstCorner().x)
-//			{
-//				double lengthX = focusCircle.getFirstCorner().x - arg0.getX();
-//				double lengthY = arg0.getY() - focusCircle.getFirstCorner().y;
-//				double newlength = Math.min(lengthX, lengthY);
-//				
-//				focusCircle.setUpperLeft(new Point2D.Double(focusCircle.getFirstCorner().x - newlength, focusCircle.getFirstCorner().y));
-//				//focusRect.setCenter(new Point2D.Double(x,y));
-//				
-//				focusCircle.setRadius(newlength / 2);
-//			}
-//		}
-//
-//		//if the cursor is moving above the upperleft corner
-//		if(arg0.getY() < focusCircle.getFirstCorner().y)
-//		{
-//			//if the cursor is moving to the upperright quad
-//			if(arg0.getX() > focusCircle.getFirstCorner().x)
-//			{
-//				double lengthX = arg0.getX() - focusCircle.getFirstCorner().x;
-//				double lengthY = focusCircle.getFirstCorner().y - arg0.getY();
-//				double newlength = Math.min(lengthX, lengthY);
-//				
-//				focusCircle.setUpperLeft(new Point2D.Double(focusCircle.getFirstCorner().x, focusCircle.getFirstCorner().y  - newlength));
-//				//focusRect.setCenter(new Point2D.Double(x,y));
-//				
-//				focusCircle.setRadius(newlength / 2);
-//			}
-//
-//			//if the cursor is moving to the upperleft quad
-//			if(arg0.getX() < focusCircle.getFirstCorner().x)
-//			{
-//				double lengthX = focusCircle.getFirstCorner().x - arg0.getX();
-//				double lengthY = focusCircle.getFirstCorner().y - arg0.getY();
-//				double newlength = Math.min(lengthX, lengthY);
-//				
-//				focusCircle.setUpperLeft(new Point2D.Double(focusCircle.getFirstCorner().x - newlength, focusCircle.getFirstCorner().y - newlength));
-//				//focusRect.setCenter(new Point2D.Double(x,y));
-//				
-//				focusCircle.setRadius(newlength / 2);
-//			}
-//		}
-//		Model.get().setRecent(focusCircle);
-	}
-	
-	
-
 	
 	
 	@Override

@@ -37,8 +37,11 @@ public class View implements ViewRefresher
 			
 			//draw primary shape
 			g2d.setColor(focus.getColor());
-			g2d.fill(shapeFactory(focus));
-			g2d.draw(shapeFactory(focus));
+			if(shapeFactory(focus) != null)
+			{
+				g2d.fill(shapeFactory(focus));
+				g2d.draw(shapeFactory(focus));
+			}
 			
 			//draw handles if the shape is active
 		}
@@ -81,29 +84,26 @@ public class View implements ViewRefresher
 		
 		if(focus instanceof Triangle)
 		{
-			if(((Triangle) focus).getCornerCount() == 3)
-			{
-				int[] x = new int[3];
-				int[] y = new int[3];
-				
-				x[0] = (int) ((Triangle) focus).getA().x;
-				x[1] = (int) ((Triangle) focus).getB().x;
-				x[2] = (int) ((Triangle) focus).getC().x;
-				
-				y[0] = (int) ((Triangle) focus).getA().y;
-				y[1] = (int) ((Triangle) focus).getB().y;
-				y[2] = (int) ((Triangle) focus).getC().y;
-				
-				Polygon tri = new Polygon();
-				tri.addPoint(x[0], y[0]);
-				tri.addPoint(x[1], y[1]);
-				tri.addPoint(x[2], y[2]);
-				return tri;
-			}
-			else
-			{
+			if(focus.getCenter() == null)
 				return null;
-			}
+			
+			Triangle active = (Triangle) focus;
+			int[] x = new int[3];
+			int[] y = new int[3];
+			
+			x[0] = (int)active.getCenter().x - (int) active.getA().x;
+			x[1] = (int)active.getCenter().x - (int) active.getB().x;
+			x[2] = (int)active.getCenter().x - (int) active.getC().x;
+			
+			y[0] = (int)active.getCenter().y - (int) active.getA().y;
+			y[1] = (int)active.getCenter().y - (int) active.getB().y;
+			y[2] = (int)active.getCenter().y - (int) active.getC().y;
+			
+			Polygon tri = new Polygon();
+			tri.addPoint(x[0], y[0]);
+			tri.addPoint(x[1], y[1]);
+			tri.addPoint(x[2], y[2]);
+			return tri;
 		}
 		
 		return null;
