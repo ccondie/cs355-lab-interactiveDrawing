@@ -16,7 +16,8 @@ public class Ellipse extends Shape
 	 * @param width the width of the new shape.
 	 * @param height the height of the new shape.
 	 */
-	public Ellipse(Color color, Point2D.Double center, double width, double height) {
+	public Ellipse(Color color, Point2D.Double center, double width, double height) 
+	{
 
 		// Initialize the superclass.
 		super(color, center);
@@ -24,6 +25,7 @@ public class Ellipse extends Shape
 		// Set fields.
 		this.width = width;
 		this.height = height;
+		this.fixedCorner = center;
 	}
 	
 
@@ -31,7 +33,7 @@ public class Ellipse extends Shape
 	/////	User Defined Variables	///////////////////////////
 	///////////////////////////////////////////////////////////
 	
-	private Point2D.Double firstCorner;
+	private Point2D.Double fixedCorner;
 	
 	
 	///////////////////////////////////////////////////////////
@@ -64,11 +66,11 @@ public class Ellipse extends Shape
 		return returnThis;
 	}
 	
-	public Point2D.Double getFirstCorner()
-	{	return firstCorner;	}
+	public Point2D.Double getFixedCorner()
+	{	return fixedCorner;	}
 			
-	public void setFirstCorner(Point2D.Double point)
-	{	 firstCorner = point;	}
+	public void setFixedCorner(Point2D.Double point)
+	{	 fixedCorner = point;	}
 	
 	
 	///////////////////////////////////////////////////////////

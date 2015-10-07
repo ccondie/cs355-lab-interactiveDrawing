@@ -23,13 +23,14 @@ public class Circle extends Shape
 
 		// Set the field.
 		this.radius = radius;
+		this.fixedCorner = center;
 	}
 	
 	///////////////////////////////////////////////////////////
 	/////	User Defined Variables	///////////////////////////
 	///////////////////////////////////////////////////////////
 	
-	private Point2D.Double firstCorner;
+	private Point2D.Double fixedCorner;
 	
 	///////////////////////////////////////////////////////////
 	/////	Abstracted/Program defined Variables	///////////
@@ -47,8 +48,8 @@ public class Circle extends Shape
 	{
 		Point2D.Double returnThis = new Point2D.Double();
 		
-		double x = center.x - (radius/2);
-		double y = center.y - (radius/2);
+		double x = center.x - (radius);
+		double y = center.y - (radius);
 		
 		returnThis.x = x;
 		returnThis.y = y;
@@ -56,11 +57,11 @@ public class Circle extends Shape
 		return returnThis;
 	}
 	
-	public Point2D.Double getFirstCorner()
-	{	return firstCorner;	}
+	public Point2D.Double getFixedCorner()
+	{	return fixedCorner;	}
 			
-	public void setFirstCorner(Point2D.Double point)
-	{	 firstCorner = point;	}
+	public void setFixedCorner(Point2D.Double point)
+	{	 fixedCorner = point;	}
 	
 	///////////////////////////////////////////////////////////
 	/////	Abstracted/Program defined Methods	///////////////
