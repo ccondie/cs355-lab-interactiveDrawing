@@ -100,8 +100,21 @@ public class Square extends Shape
 	 *		   false otherwise.
 	 */
 	@Override
-	public boolean pointInShape(Point2D.Double pt, double tolerance) {
-		throw new UnsupportedOperationException("Not supported yet.");
+	public boolean pointInShape(Point2D.Double pt, double tolerance) 
+	{
+//		throw new UnsupportedOperationException("Not supported yet.");
+		if(pt.x < (center.x - (size / 2)))
+			return false;
+		if(pt.x > (center.x + (size / 2)))
+			return false;
+		if(pt.y < (center.y - (size / 2)))
+			return false;
+		if(pt.y > (center.y + (size / 2)))
+			return false;
+		
+		System.out.println("HIT INSIDE A SQUARE");
+		setActive(true);
+		return true;
 	}
 
 }

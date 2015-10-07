@@ -103,8 +103,21 @@ public class Rectangle extends Shape
 	 *		   false otherwise.
 	 */
 	@Override
-	public boolean pointInShape(Point2D.Double pt, double tolerance) {
-		throw new UnsupportedOperationException("Not supported yet.");
+	public boolean pointInShape(Point2D.Double pt, double tolerance) 
+	{
+//		throw new UnsupportedOperationException("Not supported yet.");
+		if(pt.x < (center.x - (width / 2)))
+			return false;
+		if(pt.x > (center.x + (width / 2)))
+			return false;
+		if(pt.y < (center.y - (height / 2)))
+			return false;
+		if(pt.y > (center.y + (height / 2)))
+			return false;
+		
+		System.out.println("HIT INSIDE A RECTANGLE");
+		setActive(true);
+		return true;
 	}
 
 }

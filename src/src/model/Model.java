@@ -42,6 +42,7 @@ public class Model extends CS355Drawing
 	public static Color selectedColor;
 	public static ArrayList<Shape> shapes;
 	public static ArrayList<Observer> observers;
+	public static int activeShape;
 	
 	public void setColor(Color c)
 	{	
@@ -71,6 +72,8 @@ public class Model extends CS355Drawing
 		case 4: System.out.print("ellipse" + "\n");
 			break;
 		case 5: System.out.print("triangle" + "\n");
+			break;
+		case 6: System.out.print("selection" + "\n");
 			break;
 		}
 	}

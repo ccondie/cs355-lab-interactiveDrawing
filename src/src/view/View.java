@@ -44,6 +44,11 @@ public class View implements ViewRefresher
 			}
 			
 			//draw handles if the shape is active
+			if((shapeFactory(focus) != null) && (focus.getActive()))
+			{
+				g2d.setColor(Color.WHITE);
+				g2d.draw(shapeFactory(focus));
+			}
 		}
 	}
 	

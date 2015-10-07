@@ -3,6 +3,7 @@ package src.control;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,6 +34,8 @@ public class Control implements CS355Controller
 	
 	boolean activeShape = false;
 	ArrayList<Point2D.Double> activeTriangle = new ArrayList<Point2D.Double>();
+	Point2D.Double dragStart;
+	Point2D.Double dragLive;
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) 
@@ -51,94 +54,120 @@ public class Control implements CS355Controller
 	{
 		// TODO Auto-generated method stub
 		System.out.println("Mouse Pressed: x-" + arg0.getX() + " y-" + arg0.getY());
-		
-		if(activeShape)
+		if(Model.get().currentMode <= 5)
 		{
-			if(Model.get().getRecent() instanceof Line)
-			{	activeShape = false;	}
-			
-			if(Model.get().getRecent() instanceof Square)
-			{	activeShape = false;	}
-			
-			if(Model.get().getRecent() instanceof Rectangle)
-			{	activeShape = false;	}
-			
-			if(Model.get().getRecent() instanceof Circle)
-			{	activeShape = false;	}
-			
-			if(Model.get().getRecent() instanceof Ellipse)
-			{	activeShape = false;	}
-			
-			if(Model.get().getRecent() instanceof Triangle)
-			{	
-				if(activeTriangle.size() == 1)
-				{
-					//add second corner
-					System.out.println("ADDING SECOND CORNER");
-					activeTriangle.add(new Point2D.Double(arg0.getX(), arg0.getY()));
-				}
-				else if(activeTriangle.size() == 2)
-				{
-					//add third corner
-					System.out.println("ADDING THIRD CORNER");
-					activeTriangle.add(new Point2D.Double(arg0.getX(), arg0.getY()));
-					//calculate center
-					Point2D.Double center = new Point2D.Double();
-					center.x = (activeTriangle.get(0).x + activeTriangle.get(1).x + activeTriangle.get(2).x) / 3;
-					center.y = (activeTriangle.get(0).y + activeTriangle.get(1).y + activeTriangle.get(2).y) / 3;
-					
-					//calculate a,b,c
-					Point2D.Double a = new Point2D.Double(center.x - activeTriangle.get(0).x, center.y - activeTriangle.get(0).y);
-					Point2D.Double b = new Point2D.Double(center.x - activeTriangle.get(1).x, center.y - activeTriangle.get(1).y);
-					Point2D.Double c = new Point2D.Double(center.x - activeTriangle.get(2).x, center.y - activeTriangle.get(2).y);
-					
-					//create Triangle
-					Triangle focus = new Triangle(Model.selectedColor, center, a, b, c);
-					Model.get().setRecent(focus);
-					System.out.println(focus.toString());
-					
-					//reset activeTriangle
-					activeTriangle.clear();
-					
-					//refresh GUI
-					GUIFunctions.refresh();
-					activeShape = false;
-				}
-			}
-		}
-		else
-		{
-			switch(Model.get().currentMode)
+			if(activeShape)
 			{
-			case 0:
-				Model.get().addShape(new Line(Model.selectedColor, new Point2D.Double(arg0.getX(), arg0.getY()), new Point2D.Double(arg0.getX(), arg0.getY())));
-				activeShape = true;
-				break;
-			case 1: 
-				Model.get().addShape(new Square(Model.selectedColor, new Point2D.Double(arg0.getX(), arg0.getY()), 0));
-				activeShape = true;
-				break;
-			case 2: 
-				Model.get().addShape(new Rectangle(Model.selectedColor, new Point2D.Double(arg0.getX(), arg0.getY()),0, 0));
-				activeShape = true;
-				break;
-			case 3: 
-				Model.get().addShape(new Circle(Model.selectedColor, new Point2D.Double(arg0.getX(), arg0.getY()),0));
-				activeShape = true;
-				break;
-			case 4: 
-				Model.get().addShape(new Ellipse(Model.selectedColor, new Point2D.Double(arg0.getX(), arg0.getY()),0, 0));
-				activeShape = true;
-				break;
-			case 5: 
-				Model.get().addShape(new Triangle(Model.selectedColor, null, null, null, null));
-				System.out.println("ADDING FIRST CORNER");
-				activeTriangle.add(new Point2D.Double(arg0.getX(), arg0.getY()));
-				activeShape = true;
-				break;
+				if(Model.get().getRecent() instanceof Line)
+				{	activeShape = false;	}
+				
+				if(Model.get().getRecent() instanceof Square)
+				{	activeShape = false;	}
+				
+				if(Model.get().getRecent() instanceof Rectangle)
+				{	activeShape = false;	}
+				
+				if(Model.get().getRecent() instanceof Circle)
+				{	activeShape = false;	}
+				
+				if(Model.get().getRecent() instanceof Ellipse)
+				{	activeShape = false;	}
+				
+				if(Model.get().getRecent() instanceof Triangle)
+				{	
+					if(activeTriangle.size() == 1)
+					{
+						//add second corner
+						System.out.println("ADDING SECOND CORNER");
+						activeTriangle.add(new Point2D.Double(arg0.getX(), arg0.getY()));
+					}
+					else if(activeTriangle.size() == 2)
+					{
+						//add third corner
+						System.out.println("ADDING THIRD CORNER");
+						activeTriangle.add(new Point2D.Double(arg0.getX(), arg0.getY()));
+						//calculate center
+						Point2D.Double center = new Point2D.Double();
+						center.x = (activeTriangle.get(0).x + activeTriangle.get(1).x + activeTriangle.get(2).x) / 3;
+						center.y = (activeTriangle.get(0).y + activeTriangle.get(1).y + activeTriangle.get(2).y) / 3;
+						
+						//calculate a,b,c
+						Point2D.Double a = new Point2D.Double(center.x - activeTriangle.get(0).x, center.y - activeTriangle.get(0).y);
+						Point2D.Double b = new Point2D.Double(center.x - activeTriangle.get(1).x, center.y - activeTriangle.get(1).y);
+						Point2D.Double c = new Point2D.Double(center.x - activeTriangle.get(2).x, center.y - activeTriangle.get(2).y);
+						
+						//create Triangle
+						Triangle focus = new Triangle(Model.selectedColor, center, a, b, c);
+						Model.get().setRecent(focus);
+						System.out.println(focus.toString());
+						
+						//reset activeTriangle
+						activeTriangle.clear();
+						
+						//refresh GUI
+						GUIFunctions.refresh();
+						activeShape = false;
+					}
+				}
+			}
+			else
+			{
+				switch(Model.get().currentMode)
+				{
+				case 0:
+					Model.get().addShape(new Line(Model.selectedColor, new Point2D.Double(arg0.getX(), arg0.getY()), new Point2D.Double(arg0.getX(), arg0.getY())));
+					activeShape = true;
+					break;
+				case 1: 
+					Model.get().addShape(new Square(Model.selectedColor, new Point2D.Double(arg0.getX(), arg0.getY()), 0));
+					activeShape = true;
+					break;
+				case 2: 
+					Model.get().addShape(new Rectangle(Model.selectedColor, new Point2D.Double(arg0.getX(), arg0.getY()),0, 0));
+					activeShape = true;
+					break;
+				case 3: 
+					Model.get().addShape(new Circle(Model.selectedColor, new Point2D.Double(arg0.getX(), arg0.getY()),0));
+					activeShape = true;
+					break;
+				case 4: 
+					Model.get().addShape(new Ellipse(Model.selectedColor, new Point2D.Double(arg0.getX(), arg0.getY()),0, 0));
+					activeShape = true;
+					break;
+				case 5: 
+					Model.get().addShape(new Triangle(Model.selectedColor, null, null, null, null));
+					System.out.println("ADDING FIRST CORNER");
+					activeTriangle.add(new Point2D.Double(arg0.getX(), arg0.getY()));
+					activeShape = true;
+					break;
+				}
 			}
 		}
 		
+		if(Model.get().currentMode == 6)
+		{
+			System.out.println("RUNNING HIT SELECTION ON SHAPES");
+			//Handle selection
+			Point2D.Double hitPoint = new Point2D.Double(arg0.getX(), arg0.getY());
+			boolean runLoop = true;
+			boolean shapeSelected = false;
+			int count = Model.get().getShapes().size() - 1;
+			
+			for(int i = 0; i < Model.get().getShapes().size(); i++)
+			{	Model.get().getShape(i).setActive(false);	}
+			
+			while(runLoop && (count >= 0 ))
+			{
+				shapeSelected = Model.get().getShape(count).pointInShape(hitPoint, 1);
+				if(shapeSelected == true)
+				{
+					runLoop = false;
+					Model.activeShape = count;
+				}
+				count--;
+			}
+			GUIFunctions.refresh();
+		}
 	}
 
 	@Override
@@ -334,13 +363,11 @@ public class Control implements CS355Controller
 
 	@Override
 	public void triangleButtonHit() 
-	{	
-		Model.get().setMode(5);
-	}
+	{	Model.get().setMode(5);	}
 
 	@Override
 	public void selectButtonHit() 
-	{	}
+	{	Model.get().setMode(6);	}
 	
 	@Override
 	public void zoomInButtonHit() 

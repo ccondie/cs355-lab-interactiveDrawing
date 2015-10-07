@@ -7,7 +7,33 @@ import java.awt.geom.Point2D;
  * This is the base class for all of your shapes.
  * Make sure they all extend this class.
  */
-public abstract class Shape {
+public abstract class Shape 
+{
+	
+	/**
+	 * Basic constructor that sets fields.
+	 * It initializes rotation to 0.
+	 * @param color the color for the new shape.
+	 * @param center the center point of the new shape.
+	 */
+	public Shape(Color color, Point2D.Double center) 
+	{
+		this.color = color;
+		this.center = center;
+		rotation = 0.0;
+	}
+	
+	///////////////////////////////////////////////////////////
+	/////	User Defined Variables	///////////////////////////
+	///////////////////////////////////////////////////////////
+	
+	//flag a shape as active
+	protected boolean active;
+	
+	
+	///////////////////////////////////////////////////////////
+	/////	Abstracted/Program defined Variables	///////////
+	///////////////////////////////////////////////////////////
 
 	// The color of this shape.
 	protected Color color;
@@ -17,19 +43,25 @@ public abstract class Shape {
 
 	// The rotation of this shape.
 	protected double rotation;
+		
+		
 
-	/**
-	 * Basic constructor that sets fields.
-	 * It initializes rotation to 0.
-	 * @param color the color for the new shape.
-	 * @param center the center point of the new shape.
-	 */
-	public Shape(Color color, Point2D.Double center) {
-		this.color = color;
-		this.center = center;
-		rotation = 0.0;
-	}
-
+	
+	///////////////////////////////////////////////////////////
+	/////	User Defined Methods	///////////////////////////
+	///////////////////////////////////////////////////////////
+	
+	public boolean getActive()
+	{	return active;	}
+	
+	public void setActive(boolean state)
+	{	active = state;	}
+	
+	
+	
+	///////////////////////////////////////////////////////////
+	/////	Abstracted/Program defined Methods	///////////////
+	///////////////////////////////////////////////////////////
 	/**
 	 * Getter for this shape's color.
 	 * @return the color of this shape.
