@@ -23,6 +23,7 @@ public class Model extends CS355Drawing
 			selectedColor = Color.WHITE;
 			shapes = new ArrayList<Shape>();
 			observers = new ArrayList<Observer>();
+			activeShape = -1;
 		}
 		return model;
 	}
@@ -81,13 +82,36 @@ public class Model extends CS355Drawing
 	//Notifies the observers (the View) that a change has been made
 	public void notifyObservers()
 	{
+		setChanged();
 		super.notifyObservers();
 		System.out.println("Model Notified Observers");
 	}
 	
 	@Override
 	public Shape getShape(int index) 
-	{	return shapes.get(index);	}
+	{
+		if(shapes.size() > 0)
+			return shapes.get(index);	
+		else
+			return null;
+	}
+	
+	public void clearActiveShapes()
+	{
+		for(int i = 0; i < getShapes().size(); i++)
+		{	getShape(i).setActive(false);	}
+		
+		setChanged();
+		notifyObservers();
+	}
+	
+	public Shape getActive()
+	{
+		if(shapes.size() > 0)
+			return shapes.get(activeShape);	
+		else
+			return null;
+	}
 
 	public Shape getRecent()
 	{	return shapes.get(shapes.size() - 1);	}

@@ -2,7 +2,11 @@ package cs355.model.drawing;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.io.StringWriter;
+
+import src.model.Model;
+import cs355.GUIFunctions;
 
 /**
  * Add your triangle code here. You can add fields, but you cannot
@@ -61,6 +65,22 @@ public class Triangle extends Shape
 		sw.append("Center - x:" + center.x + " - y:" + center.y + '\n');
 		
 		return sw.toString();
+	}
+	
+	public Point2D.Double getHandle()
+	{	
+		double smallestY = a.y;
+		
+		if(smallestY > b.y)
+			smallestY = b.y;
+		
+		if(smallestY > c.y)
+			smallestY = c.y;
+		
+		Point2D.Double handle = new Point2D.Double(0, smallestY - 15);
+	
+		
+		return handle;
 	}
 
 
@@ -127,8 +147,30 @@ public class Triangle extends Shape
 	 *		   false otherwise.
 	 */
 	@Override
-	public boolean pointInShape(Point2D.Double pt, double tolerance) {
-		throw new UnsupportedOperationException("Not supported yet.");
+	public boolean pointInShape(Point2D.Double pt, double tolerance) 
+	{
+		System.out.println("Checking point in TRIANGLE");
+		Point2D.Double ptObj = worldToObj(pt);
+		boolean b1, b2, b3;
+
+	    b1 = sign(ptObj, a, b) < 0;
+	    b2 = sign(ptObj, b, c) < 0;
+	    b3 = sign(ptObj, c, a) < 0;
+	    
+	    if((b1 == b2) && (b2 == b3))
+	    {
+	    	System.out.println("HIT INSIDE A Triangle");
+			GUIFunctions.changeSelectedColor(color);
+			Model.get().setColor(color);
+			setActive(true);
+			
+			return true;
+	    }
+	    
+	    return false;
 	}
+	
+	public double sign (Point2D.Double p1, Point2D.Double p2, Point2D.Double p3)
+	{	return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);	}
 
 }

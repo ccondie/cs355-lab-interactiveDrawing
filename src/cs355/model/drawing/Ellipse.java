@@ -2,6 +2,10 @@ package cs355.model.drawing;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
+
+import src.model.Model;
+import cs355.GUIFunctions;
 
 /**
  * Add your ellipse code here. You can add fields, but you cannot
@@ -72,6 +76,16 @@ public class Ellipse extends Shape
 	public void setFixedCorner(Point2D.Double point)
 	{	 fixedCorner = point;	}
 	
+	public Point2D.Double getHandle()
+	{		
+		Point2D.Double handle = new Point2D.Double();
+		
+		handle.x = 0;
+		handle.y = -(height/2) - 15;
+		
+		return handle;
+	}
+	
 	
 	///////////////////////////////////////////////////////////
 	/////	Abstracted/Program defined Methods	///////////////
@@ -118,8 +132,23 @@ public class Ellipse extends Shape
 	 *		   false otherwise.
 	 */
 	@Override
-	public boolean pointInShape(Point2D.Double pt, double tolerance) {
-		throw new UnsupportedOperationException("Not supported yet.");
+	public boolean pointInShape(Point2D.Double pt, double tolerance)
+	{
+		Point2D.Double ptObj = worldToObj(pt);
+		
+		if((Math.pow(ptObj.x / (width / 2), 2)) + (Math.pow(ptObj.y / (height / 2), 2)) <= 1)
+		{
+			System.out.println("HIT INSIDE A Ellipse");
+			GUIFunctions.changeSelectedColor(color);
+			Model.get().setColor(color);
+			setActive(true);
+			
+			return true;
+		}
+		
+		return false;
+
 	}
+
 
 }

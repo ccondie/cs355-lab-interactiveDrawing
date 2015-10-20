@@ -1,7 +1,9 @@
 package cs355.model.drawing;
 
 import java.awt.Color;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 
 /**
  * This is the base class for all of your shapes.
@@ -57,7 +59,20 @@ public abstract class Shape
 	public void setActive(boolean state)
 	{	active = state;	}
 	
+	public abstract Point2D.Double getHandle();
 	
+	public Point2D.Double worldToObj(Point2D.Double world)
+	{
+		AffineTransform worldToObj = new AffineTransform();
+		Point2D.Double obj = new Point2D.Double();
+		
+		worldToObj.rotate(-rotation);
+		worldToObj.translate(-center.x, -center.y);
+		
+		worldToObj.transform(world, obj);
+		
+		return obj;
+	}
 	
 	///////////////////////////////////////////////////////////
 	/////	Abstracted/Program defined Methods	///////////////
@@ -117,4 +132,23 @@ public abstract class Shape
 	 * @return true if pt is in the shape, false otherwise.
 	 */
 	public abstract boolean pointInShape(Point2D.Double pt, double tolerance);
+	
+	public boolean pointInHandle(Double pt) 
+	{	
+		Point2D.Double objPt = worldToObj(pt);
+		
+		double diff = Math.pow((objPt.x - getHandle().x), 2) + Math.pow((objPt.y - getHandle().y), 2);
+		
+		if(diff < Math.pow(8, 2))
+		{
+			System.out.println("TRUE");
+			return true;
+		}
+		else
+		{
+			System.out.println("FALSE");
+			return false;
+		}
+			
+	}
 }

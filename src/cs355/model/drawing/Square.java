@@ -1,7 +1,12 @@
 package cs355.model.drawing;
 
 import java.awt.Color;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
+
+import src.model.Model;
+import cs355.GUIFunctions;
 
 /**
  * Add your square code here. You can add fields, but you cannot
@@ -69,7 +74,15 @@ public class Square extends Shape
 	public void setFixedCorner(Point2D.Double point)
 	{	 fixedCorner = point;	}
 	
-	
+	public Point2D.Double getHandle()
+	{
+		Point2D.Double handle = new Point2D.Double();
+		
+		handle.x = 0;
+		handle.y = -(size * 1)/2 - 15;
+		
+		return handle;
+	}
 	
 	
 	///////////////////////////////////////////////////////////
@@ -102,19 +115,25 @@ public class Square extends Shape
 	@Override
 	public boolean pointInShape(Point2D.Double pt, double tolerance) 
 	{
+		Point2D.Double ptObj = worldToObj(pt);
 //		throw new UnsupportedOperationException("Not supported yet.");
-		if(pt.x < (center.x - (size / 2)))
+		if(ptObj.x < (0 - (size / 2)))
 			return false;
-		if(pt.x > (center.x + (size / 2)))
+		if(ptObj.x > (0 + (size / 2)))
 			return false;
-		if(pt.y < (center.y - (size / 2)))
+		if(ptObj.y < (0 - (size / 2)))
 			return false;
-		if(pt.y > (center.y + (size / 2)))
+		if(ptObj.y > (0 + (size / 2)))
 			return false;
 		
 		System.out.println("HIT INSIDE A SQUARE");
+		GUIFunctions.changeSelectedColor(color);
+		Model.get().setColor(color);
 		setActive(true);
 		return true;
 	}
+
+
+	
 
 }

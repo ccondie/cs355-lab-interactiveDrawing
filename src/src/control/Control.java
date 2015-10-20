@@ -34,8 +34,15 @@ public class Control implements CS355Controller
 	
 	boolean activeShape = false;
 	ArrayList<Point2D.Double> activeTriangle = new ArrayList<Point2D.Double>();
-	Point2D.Double dragStart;
-	Point2D.Double dragLive;
+	
+	Point2D.Double clickStart;
+	
+	public boolean dragging;
+	public boolean rotating;
+	public boolean lineSelected;
+	
+	
+	public boolean currentSel;
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) 
@@ -52,6 +59,8 @@ public class Control implements CS355Controller
 	@Override
 	public void mousePressed(MouseEvent arg0) 
 	{
+		clickStart = new Point2D.Double(arg0.getX(), arg0.getY());
+		
 		// TODO Auto-generated method stub
 		System.out.println("Mouse Pressed: x-" + arg0.getX() + " y-" + arg0.getY());
 		if(Model.get().currentMode <= 5)
@@ -91,10 +100,16 @@ public class Control implements CS355Controller
 						center.x = (activeTriangle.get(0).x + activeTriangle.get(1).x + activeTriangle.get(2).x) / 3;
 						center.y = (activeTriangle.get(0).y + activeTriangle.get(1).y + activeTriangle.get(2).y) / 3;
 						
+						System.out.println("center.x:" + center.x + " - center.y:" + center.y);
+						
 						//calculate a,b,c
-						Point2D.Double a = new Point2D.Double(center.x - activeTriangle.get(0).x, center.y - activeTriangle.get(0).y);
-						Point2D.Double b = new Point2D.Double(center.x - activeTriangle.get(1).x, center.y - activeTriangle.get(1).y);
-						Point2D.Double c = new Point2D.Double(center.x - activeTriangle.get(2).x, center.y - activeTriangle.get(2).y);
+						Point2D.Double a = new Point2D.Double(activeTriangle.get(0).x - center.x, activeTriangle.get(0).y - center.y);
+						Point2D.Double b = new Point2D.Double(activeTriangle.get(1).x - center.x, activeTriangle.get(1).y - center.y);
+						Point2D.Double c = new Point2D.Double(activeTriangle.get(2).x - center.x, activeTriangle.get(2).y - center.y);
+						
+						System.out.println("a.x:" + a.x + " - a.y:" + a.y);
+						System.out.println("b.x:" + b.x + " - b.y:" + b.y);
+						System.out.println("c.x:" + c.x + " - c.y:" + c.y);
 						
 						//create Triangle
 						Triangle focus = new Triangle(Model.selectedColor, center, a, b, c);
@@ -105,7 +120,8 @@ public class Control implements CS355Controller
 						activeTriangle.clear();
 						
 						//refresh GUI
-						GUIFunctions.refresh();
+						//GUIFunctions.refresh();
+						Model.get().notifyObservers();
 						activeShape = false;
 					}
 				}
@@ -115,7 +131,7 @@ public class Control implements CS355Controller
 				switch(Model.get().currentMode)
 				{
 				case 0:
-					Model.get().addShape(new Line(Model.selectedColor, new Point2D.Double(arg0.getX(), arg0.getY()), new Point2D.Double(arg0.getX(), arg0.getY())));
+					Model.get().addShape(new Line(Model.selectedColor, new Point2D.Double(arg0.getX(), arg0.getY()), new Point2D.Double(0, 0)));
 					activeShape = true;
 					break;
 				case 1: 
@@ -146,37 +162,138 @@ public class Control implements CS355Controller
 		
 		if(Model.get().currentMode == 6)
 		{
-			System.out.println("RUNNING HIT SELECTION ON SHAPES");
-			//Handle selection
-			Point2D.Double hitPoint = new Point2D.Double(arg0.getX(), arg0.getY());
-			boolean runLoop = true;
-			boolean shapeSelected = false;
-			int count = Model.get().getShapes().size() - 1;
-			
-			for(int i = 0; i < Model.get().getShapes().size(); i++)
-			{	Model.get().getShape(i).setActive(false);	}
-			
-			while(runLoop && (count >= 0 ))
+			//check if there is an active shape
+				//if there is then check to see if the handle was hit
+			boolean handleSelected = false;
+			if(currentSel)
 			{
-				shapeSelected = Model.get().getShape(count).pointInShape(hitPoint, 1);
-				if(shapeSelected == true)
+				handleSelected = Model.get().getActive().pointInHandle(clickStart);
+				if(handleSelected == true)
 				{
-					runLoop = false;
-					Model.activeShape = count;
+					rotating = true;
 				}
-				count--;
 			}
-			GUIFunctions.refresh();
+
+			if(!rotating)
+			{
+				//if there isn't an active shape, loop for hit selection
+				System.out.println("RUNNING HIT SELECTION ON SHAPES");
+				lineSelected = false;
+				//Handle selection
+				boolean runLoop = true;
+				boolean shapeSelected = false;
+				int count = Model.get().getShapes().size() - 1;
+				
+				
+				
+				//defaults all the shapes to NOT active
+				Model.get().clearActiveShapes();
+				
+				//Loop through all the shapes
+				while(runLoop && (count >= 0 ))
+				{		
+					shapeSelected = Model.get().getShape(count).pointInShape(clickStart, 5);
+					if(shapeSelected == true)
+					{
+						if(Model.get().getShape(count) instanceof Line)
+							lineSelected = true;
+						
+						currentSel = true;
+						dragging = true;
+						runLoop = false;
+						Model.activeShape = count;
+					}
+					count--;
+				}
+			}
+			
+			//GUIFunctions.refresh();
+			Model.get().notifyObservers();
 		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) 
-	{	}
+	{			
+		dragging = false;
+		rotating = false;
+	}
 
 	@Override
 	public void mouseDragged(MouseEvent arg0) 
-	{	}
+	{	
+		
+		
+		System.out.print("***DRAGGING***");
+		System.out.println(" rotating:" + rotating + " - dragging:" + dragging);
+		
+		if(dragging)
+		{
+			double deltaX = clickStart.x - arg0.getX();
+			double deltaY = clickStart.y - arg0.getY();
+			
+			Model.get().getActive().getCenter().x = Model.get().getActive().getCenter().x - deltaX;
+			Model.get().getActive().getCenter().y = Model.get().getActive().getCenter().y - deltaY;
+			
+			clickStart.x = arg0.getX();
+			clickStart.y = arg0.getY();
+		}
+		
+		if(rotating && !lineSelected)
+		{
+			Point2D.Double clickStartObj = Model.get().getActive().worldToObj(clickStart);
+			Point2D.Double arg0Obj = Model.get().getActive().worldToObj(new Point2D.Double(arg0.getX(), arg0.getY()));
+			double startT = Model.get().getActive().getRotation();
+			
+			double vX = clickStartObj.x;
+			double vY = clickStartObj.y;
+			double wX = arg0Obj.getX();
+			double wY = arg0Obj.getY();
+			
+			boolean counter = false;
+			if(arg0Obj.getX() < clickStartObj.getX())
+				counter = true;
+			
+			double vm;
+			double magV;
+			double magW;
+			
+			vm = (vX * wX) + (vY * wY);
+			
+			magV = Math.sqrt(Math.pow(vX, 2) + Math.pow(vY, 2));
+			magW = Math.sqrt(Math.pow(wX, 2) + Math.pow(wY, 2));
+			
+			double deltaT = Math.acos((vm)/(magV * magW));
+			
+			if(counter)
+				Model.get().getActive().setRotation(startT - deltaT);
+			else
+				Model.get().getActive().setRotation(startT + deltaT);
+			
+			
+			
+			clickStart.x = arg0.getX();
+			clickStart.y = arg0.getY();
+			
+			System.out.println("deltaT:" + deltaT);
+		}
+		
+		if(rotating && lineSelected)
+		{
+			//handle line endpoint movement
+			Point2D.Double arg0Obj = Model.get().getActive().worldToObj(new Point2D.Double(arg0.getX(), arg0.getY()));
+			
+		}
+		
+		//GUIFunctions.refresh();
+		Model.get().notifyObservers();
+	}
+	
+	
+	
+	
+	
+	
 
 	@Override
 	public void mouseMoved(MouseEvent arg0) 
@@ -208,9 +325,11 @@ public class Control implements CS355Controller
 			if(focus instanceof Triangle)
 			{	}
 		
-			GUIFunctions.refresh();
+			//GUIFunctions.refresh();
+			Model.get().notifyObservers();
 		}
 	}
+	
 	
 	public void handleActiveSquare(MouseEvent arg0)
 	{
@@ -337,37 +456,63 @@ public class Control implements CS355Controller
 	public void colorButtonHit(Color c) 
 	{	
 		System.out.println("Color: r-" + c.getRed() + " g-" + c.getGreen() + " b-" + c.getBlue());
+		
+		if(Model.activeShape >= 0)
+			Model.get().getShape(Model.activeShape).setColor(c);
+		
 		Model.get().setColor(c);
 		GUIFunctions.changeSelectedColor(c);
 	}
 
 	@Override
 	public void lineButtonHit() 
-	{	Model.get().setMode(0);}
+	{	
+		Model.get().setMode(0);
+		Model.get().clearActiveShapes();
+	}
 
 	@Override
 	public void squareButtonHit() 
-	{	Model.get().setMode(1);}
+	{	
+		Model.get().setMode(1);
+		Model.get().clearActiveShapes();
+	}
+	
 
 	@Override
 	public void rectangleButtonHit() 
-	{	Model.get().setMode(2);}
+	{	
+		Model.get().setMode(2);
+		Model.get().clearActiveShapes();
+	}
 
 	@Override
 	public void circleButtonHit() 
-	{	Model.get().setMode(3);}
+	{	
+		Model.get().setMode(3);
+		Model.get().clearActiveShapes();
+	}
 
 	@Override
 	public void ellipseButtonHit() 
-	{	Model.get().setMode(4);}
+	{	
+		Model.get().setMode(4);
+		Model.get().clearActiveShapes();
+	}
 
 	@Override
 	public void triangleButtonHit() 
-	{	Model.get().setMode(5);	}
+	{	
+		Model.get().setMode(5);	
+		Model.get().clearActiveShapes();
+	}
 
 	@Override
 	public void selectButtonHit() 
-	{	Model.get().setMode(6);	}
+	{	
+		Model.get().setMode(6);	
+		Model.get().clearActiveShapes();
+	}
 	
 	@Override
 	public void zoomInButtonHit() 
@@ -460,7 +605,8 @@ public class Control implements CS355Controller
 
 		// Set the new shape list.
 		Model.get().setShapes(shapes);
-		GUIFunctions.refresh();
+		//GUIFunctions.refresh();
+		Model.get().notifyObservers();
 	}
 
 	@Override
